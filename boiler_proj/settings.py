@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+from corsheaders.defaults import default_headers
 from pathlib import Path
+import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,27 +22,36 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-j@739l*chw!k51=j_6@tf7$tkumaqu!b9gaj6q%g-dop7nafw0'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'artillery.pythonanywhere.com',
+    '127.0.0.1'
+]
 
 
 # Application definition
 
+
 INSTALLED_APPS = [
+    'boiler_app',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic', # Whitenoise serves static in Dev and Prod
     'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Enable Whitenoise
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -112,12 +123,47 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-STATIC_URL = 'static/'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.2/howto/static-files/
+
+STATIC_URL = '/static/'
+
+# must be called 'staticfiles' for whitenoise to work
+STATIC_ROOT =  os.path.join(BASE_DIR, 'staticfiles') 
+
+# (Django pre 4.2) File storage engine used by collectstatic. 
+# Both of these work
+# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage' # Standard Django
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage' # Standard Django
+
+
+
+# CSRF_COOKIE_SECURE = False # Development
+CSRF_COOKIE_SECURE = True  # Production
+
+# Make sure Django allows the CSRF token to be sent via cookies. Needed for React Frontend
+#CSRF_COOKIE_HTTPONLY = False
+
+# This allows the cookie to be sent in cross-origin requests.
+#CSRF_COOKIE_SAMESITE = 'None'
+
+# Add the CSRF domains here
+CSRF_TRUSTED_ORIGINS = [ 
+    'http://artillery.pythonanywhere.com',
+    'http://127.0.0.1',
+    'http://127.0.0.1:8000',
+    'http://127.0.0.1:8001',
+] 
+
+FILE_UPLOAD_PERMISSIONS = 664
+FILE_UPLOAD_DIRECTORY_PERMISSIONS = 775
+SESSION_COOKIE_SECURE =True
+
