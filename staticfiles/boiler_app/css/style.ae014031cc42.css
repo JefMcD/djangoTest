@@ -1,0 +1,9 @@
+h2{
+    font-size: 12pt;
+    color: red;
+}
+#root{
+    position:relative;
+    display: flex;
+    justify-content: center;
+}

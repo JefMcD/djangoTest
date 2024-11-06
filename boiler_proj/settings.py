@@ -17,6 +17,9 @@ from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+MEDIA_ROOT =  os.path.join(BASE_DIR, 'boiler_app_media')
+MEDIA_URL = '/boiler_app_media/'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -139,10 +142,9 @@ STATIC_URL = '/static/'
 # must be called 'staticfiles' for whitenoise to work
 STATIC_ROOT =  os.path.join(BASE_DIR, 'staticfiles') 
 
-# (Django pre 4.2) File storage engine used by collectstatic. 
-# Both of these work
-# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage' # Standard Django
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage' # Standard Django
+# (Django pre 4.2) File storage engine used by collectstatic.
+#STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage' # Standard Django
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 
@@ -163,7 +165,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8001',
 ] 
 
-FILE_UPLOAD_PERMISSIONS = 664
-FILE_UPLOAD_DIRECTORY_PERMISSIONS = 775
+FILE_UPLOAD_PERMISSIONS = 644
+FILE_UPLOAD_DIRECTORY_PERMISSIONS = 755
 SESSION_COOKIE_SECURE =True
 

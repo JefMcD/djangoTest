@@ -5,6 +5,7 @@ import sys
 
 
 def main():
+    os.umask(0o022) # Enforces 755 for directories and 644 for files by default
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'boiler_proj.settings')
     try:

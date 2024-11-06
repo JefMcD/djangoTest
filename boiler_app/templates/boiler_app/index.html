@@ -1,0 +1,34 @@
+
+{% extends "boiler_app/main_layout.html" %}
+{% load static %}
+
+{% block title %}
+    Django Default Project
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'boiler_app/css/style.css' %}?v0.001">
+{% endblock %}
+
+
+{% block boiler_app %}
+    <div id="root">
+        <h2>Hello</h2>
+        <!-- React App Injected Here -->
+    </div>
+{% endblock%}
+
+
+{% block script %}
+    {% comment %} <script src="{% static 'boiler_app/ui/client_dev_server.js' %}"></script> {% endcomment %}
+
+
+    <!-- Import GSAP Libraries -->
+    {% comment %} <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script> {% endcomment %}
+
+    <!-- Send csrf_token for React to add to form headers -->
+    {% comment %} <script type="text/javascript">
+        window.csrfToken = "{{ csrf_token }}";
+    </script> 
+     {% endcomment %}
+{% endblock %}
